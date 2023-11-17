@@ -1,0 +1,28 @@
+.map {
+    width: 400px;
+    height: 400px; /* Adjust the height as needed */
+  }
+
+  /* Style for the label */
+.file-input-label {
+    display: flex; /* Use flexbox to center align */
+    align-items: center; /* Center vertically */
+    cursor: pointer;
+  }
+  
+  /* Style for the input element (hidden) */
+  .file-input {
+    display: none;
+  }
+  
+  /* Style for the icon (MatIcon) */
+  .icon {
+    font-size: 24px; /* Adjust the font size as needed */
+    color: #007bff; /* Icon color */
+  }
+  
+  /* Style for the label text (optional) */
+  .label-text {
+    margin-left: 8px; /* Adjust the spacing between the icon and text as needed */
+  }
+  

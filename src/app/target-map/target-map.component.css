@@ -1,0 +1,15 @@
+.map {
+  width: 500px;
+  height: 350px; 
+ 
+} 
+
+mat-slider {
+  width: 70px;
+ 
+}
+
+.map-utils{
+  margin-left: 55px;
+  padding: 0%;
+}

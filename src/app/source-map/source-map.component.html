@@ -1,0 +1,20 @@
+
+<!-- <app-source-map></app-source-map> -->
+<!-- <label class="file-input-label">
+<mat-icon class="icon">image</mat-icon> 
+<input type="file" accept=".tiff, .jpeg, .bmp" (change)="addRasterImage($event)">
+</label> -->
+
+<button  (click)="fileInput.click()">
+    <mat-icon  class="icon">add_photo_alternate</mat-icon>
+    <span class="label-text">Select Raster</span>
+
+    <input #fileInput id="fileInput"  type="file" onclick="this.value = null" (change)="addRasterImage($event)" style="display:none;"/>
+  </button>
+<button mat-button (click)="removeRaster()"  >
+  <mat-icon  class="icon">delete</mat-icon> Remove Raster
+</button>
+<button mat-button (click)="getBlob()"  >
+  <mat-icon  class="icon">perm_media</mat-icon> Get BLOB
+</button>
+<div id="source-map" class="map"></div>

@@ -1,0 +1,32 @@
+
+<div class="title-container">
+  <h2 class="mat-dialog-title">Georeferencing Tool</h2>
+</div>
+<mat-dialog-content class="dialog-content">
+  <div class="maps-container">
+    <mat-card class="map-card">
+      <mat-card-content>
+        <app-source-map class="map"></app-source-map>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="map-card">
+      <mat-card-content>
+        <app-target-map class="map"></app-target-map>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+    <mat-card class="map-card">
+      <mat-card-content>
+    <!-- Table Component -->
+    <app-gcptable ></app-gcptable>
+    
+  </mat-card-content>
+  </mat-card>
+ 
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="dialog-action">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button color="primary" (click)="onProcessClick()">Process</button>
+  <button mat-raised-button color="primary" (click)="downloadImage()">Download Georeferenced Image</button>
+</mat-dialog-actions>

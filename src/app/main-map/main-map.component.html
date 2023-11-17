@@ -1,0 +1,15 @@
+
+<button mat-button (click)="openDialog()" class="btn">Georeference Tool</button>
+
+
+
+<button  (click)="fileInput.click()">
+    <mat-icon  class="icon">add_photo_alternate</mat-icon>
+    <span class="label-text">Load Georeference Image</span>
+    <input #fileInput id="fileInput"  type="file" accept=".tiff, .tif" onclick="this.value = null" (change)="LoadGeorefImage($event)" style="display:none;"/>
+  </button>
+
+  <button mat-button (click)="openConversionDialog()"  class="btn">Data Conversion</button>
+<div id="map" class="main-map" ></div>
+ 
+     <!-- <app-geomap></app-geomap> -->

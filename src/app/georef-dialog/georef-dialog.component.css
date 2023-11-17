@@ -1,0 +1,53 @@
+.title-container {
+  text-align: center;
+  background-color: hwb(52 7% 5%);
+  margin: 0;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+
+  max-height: 80vh; /* Limit the height to the viewport height */
+  overflow-y: auto; /* Add a vertical scrollbar when content exceeds the height */
+ 
+  /*overflow-x: hidden;  Hide the horizontal scrollbar */
+}
+
+.maps-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Ensure the maps container spans the full width */
+}
+
+.map-card {
+  flex: 1;
+  padding: 0;
+  margin: 5px;
+}
+
+.map {
+  width: 100%; /* Set the map width to 100% to fit the container */
+  max-height: 100%; /* Ensure the map does not exceed the card's height */
+}
+
+.table-container {
+  margin-top: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.dialog-action{
+  background-color: hwb(60 85% 5%);
+  margin: 0px;
+
+}
+
+/* ::ng-deep .dialog-content {
+  width: 1400px;
+} */
+

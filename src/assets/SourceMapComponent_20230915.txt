@@ -1,0 +1,198 @@
+  import { Component,OnInit  } from '@angular/core';
+  import { MapBrowserEvent } from 'ol';
+  import Map from 'ol/Map';
+  import View from 'ol/View';
+  import { Point } from 'ol/geom';
+  import ImageLayer from 'ol/layer/Image';
+  import TileLayer from 'ol/layer/Tile';
+  import VectorLayer from 'ol/layer/Vector';
+  import Feature from 'ol/Feature';
+  import ImageStatic from 'ol/source/ImageStatic';
+  import OSM from 'ol/source/OSM';
+  import VectorSource from 'ol/source/Vector';
+  import Icon from 'ol/style/Icon';
+  import Style from 'ol/style/Style';
+  import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+  import Extent from 'ol/interaction/Extent.js';
+  import {createEmpty, extend} from 'ol/extent.js';
+  @Component({
+    selector: 'app-source-map',
+    templateUrl: './source-map.component.html',
+    styleUrls: ['./source-map.component.css']
+  })
+  export class SourceMapComponent  {
+    map!: Map;
+    olextent!: Extent;
+    //vectorLayer: VectorLayer<VectorSource> | undefined;
+  // vectorLayer = new VectorLayer({
+  //     source: new VectorSource(),
+  //   });
+    gcpTableData: any[] = [];
+    imageLayer=new ImageLayer();
+    vectorLayer: any;
+    
+    ngOnInit() {this.olextent = new Extent(),
+      this.map = new Map({
+        target: 'source-map',
+        layers: [
+         
+        ],
+        view: new View({
+          center: [0, 0],
+          zoom: 2
+        })
+       });
+
+       
+
+    
+      // Set up a click event listener on the map
+      this.map.on('click', (event: MapBrowserEvent<any>) => {
+        const clickedCoordinates = event.coordinate;
+        // Check if clicked coordinates are within the image extent
+        const [x, y] = clickedCoordinates;
+        // const isInsideImageExtent = this.isInsideImageExtent([x,y]);
+        // if (isInsideImageExtent) {
+         // Extract x and y coordinates
+        //console.log(clickedCoordinates);
+        this.addPinToMap([x,y]);
+        this.addToGcpTable([x,y]);
+        // } else {
+        // // Clicked coordinates are outside the image extent, ignore the click event
+        // }
+      });
+    }
+
+    addRasterImage(event: any): void {
+      const selectedFiles: FileList = event.target.files;
+      if (selectedFiles.length > 0) {
+        this.map.removeLayer(this.imageLayer);
+        const selectedFile: File = selectedFiles[0];
+        const imageExtent = this.getImageExtent(selectedFile); // Get the image extent
+        console.log(this.olextent);
+        console.log(imageExtent);
+        // Handle the selected image (e.g., add it to the source map)
+        // Assuming 'map' is your OpenLayers map instance
+        this.imageLayer = new ImageLayer({
+          source: new ImageStatic({
+            url: URL.createObjectURL(selectedFile),
+            imageExtent:  [-180, -90, 180, 90], // Define the extent of the image
+            projection: 'EPSG:4326' // Assuming your projection
+          }),
+          opacity: 1
+        });
+        this.map.addLayer(this.imageLayer);
+      }
+    }
+
+    removeRaster(): void {
+      // Logic to remove raster
+      this.map.removeLayer(this.imageLayer);
+    }
+    addPinToMap(coordinates: [number, number]): void {
+      // Define the pin icon
+      // Define the MatIcon class for the pin
+      const pinIconClass = 'material-icons';
+      const pinIconContent = 'place'; // Replace with the MatIcon you want to use
+
+      // Create a style with the MatIcon
+      // const pinIconStyle = new Style({
+      //   image: new Icon({
+      //     anchor: [0.5, 1], // Anchor point of the icon (bottom-center)
+      //     size: [24, 24], // Size of the MatIcon
+      //     src: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text x="50%" y="50%" font-size="12" dy=".3em">${pinIconContent}</text></svg>`),
+      //   }),
+      // });
+
+      const pinIconStyle = new Style({
+        image: new Icon({
+          anchor: [0.5, 1], // Anchor point of the icon (bottom-center)
+          src: 'assets/raster_pin_32.png', // Replace with the path to your PNG file
+        }),
+      });
+      //console.log(pinIconStyle.getImage());
+      // Create a point geometry with the clicked coordinates
+      const pointGeometry = new Point(coordinates);
+
+      const feature = new Feature({
+        geometry: pointGeometry,
+        // Additional properties if needed
+      });
+      feature.setStyle(pinIconStyle);
+      // Add the feature to the vector layer
+
+      const vectorSource = new VectorSource({
+        features: [feature],
+      });
+      
+        this.vectorLayer = new VectorLayer({
+        source: vectorSource,
+      });
+     // console.log(this.vectorLayer);
+this.map.addLayer(this.vectorLayer);
+      //console.log(feature);
+      const imageSource = this.imageLayer.getSource();
+      //console.log(imageSource);
+      //const imageExtent = imageSource.getImageExtent();
+        //this.vectorLayer.getSource().addFeature(feature);//ERROR IS HERE
+      
+      //  // Initialize the vector layer
+      //  this.vectorLayer = new VectorLayer({
+      //   source: new VectorSource(),
+      // });
+
+  // Add the vector layer to the map
+  //this.map.addLayer(this.vectorLayer);
+      
+    }
+
+    // Function to check if coordinates are inside the image extent
+isInsideImageExtent(coordinates: [number, number]): boolean {
+  // Define the extent of your image (replace with your actual values)
+  const imageExtent = [-180, -90, 180, 90]; // Example extent
+
+  // Check if the coordinates are within the image extent
+  const [x, y] = coordinates;
+  const [minX, minY, maxX, maxY] = imageExtent;
+  const isInsideX = x >= minX && x <= maxX;
+  const isInsideY = y >= minY && y <= maxY;
+
+  return isInsideX && isInsideY;
+}
+
+    addToGcpTable(coordinates: [number, number]): void {
+      // Create a new row with Source-X and Source-Y based on the clicked coordinates
+      const sourceX = coordinates[0];
+      const sourceY = coordinates[1];
+
+      // Add the row to the GCP table data
+      this.gcpTableData.push({ SourceX: sourceX, SourceY: sourceY });
+
+      // Optionally, you can update the GCP table component with the new data
+      // this.gcpTableDataSource.data = this.gcpTableData;
+    }
+
+    // Function to get the image extent from a selected file
+getImageExtent(selectedFile: File): [number, number, number, number] | undefined {
+  // Implement logic to extract image extent from the selected file.
+  // This logic may vary depending on the file format and metadata availability.
+
+  // Example: Assuming you have a method to extract extent from the image
+  // Replace this with the actual logic to obtain the extent
+  const extent = this.extractImageExtent(selectedFile);
+
+  return extent;
+}
+
+// Replace this example with your actual logic to extract image extent
+extractImageExtent(selectedFile: File): [number, number, number, number] | undefined {
+  // Example logic (replace with actual implementation)
+  // This is just a placeholder to demonstrate the concept
+  if (selectedFile.name === 'example_image.png') {
+    return [-180, -90, 180, 90]; // Example extent
+  } else {
+    return undefined; // Return undefined if extent cannot be determined
+  }
+}
+    
+  }
