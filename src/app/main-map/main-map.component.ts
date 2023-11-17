@@ -103,9 +103,9 @@ export class MainMapComponent {
   });
 } catch (error) {
   console.error('Error loading GeoTIFF:', error);
-  // Handle the error, e.g., show an error message
-}
+  // Handle the error, e.g., show an error message hello
+} 
    
-    }
+    } 
   }
 }
